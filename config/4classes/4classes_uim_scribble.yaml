@@ -1,0 +1,99 @@
+DATA:
+  data_root: /data/matting/
+  task: matting
+  matting_test_set: matting
+  train_split: train
+  val_split: test
+  test_split: all # ['all', 'SO', 'ST', 'NSO', 'NST']
+
+  classes: 1
+  in_channels: 4
+  train_num_bgs: 100
+  val_num_bgs: 20
+  test_num_bgs: 20
+  
+  use_iogpoints: False
+  use_roimasking: False
+  use_trimap: False
+  use_bbox: False
+  use_in_point: False
+  use_extreme_points: False
+  use_iogdextr: False
+  use_scribble: True
+  trimap_type: standard
+  mask_type: alpha
+  bbox_type: area
+
+  no_crop: True
+  relax_crop: 0.1
+  crop_size: 512
+  rotate_degree: 30
+  scale: [0.8, 1.25]
+  shear: 10
+  flip: 0.5
+
+TRAIN:
+  # model
+  arch: uim
+  fusion_method: in_decoder
+  encoder_layers: [3, 4, 4, 2]
+  decoder_layers: [2, 3, 3, 2]
+  pretrain: True
+  backbone_checkpoint_path: /data/segmentation/mattingseg/pretrained_models/resnet34-333f7ec4.pth
+  sync_bn: False # adopt sync_bn or not
+  weight: # path to initial weight (default: none)
+  resume: # path to latest checkpoint (default: none)
+
+  # optimization
+  optimizer: adam # adam or sgd
+  base_lr: 0.0004
+  weight_decay: 0
+  beta1: 0.5
+  beta2: 0.999
+  momentum: 0.9 # sgd param
+  grad_clip: True
+  use_scheduler: True
+  lr_policy: warmup
+  warmup_iter: 5000
+  power: 0.9 # lr_policy 'poly' param
+  diff_lr: False
+  aux_weight: 1
+
+  # validation set
+  evaluate: True # evaluate on validation set, extra gpu memory needed and small batch_size_val is recommend
+  val_freq: 10
+
+  # configs
+  workers: 8
+  workers_test: 4
+  batch_size: 64 # batch size for training
+  batch_size_val: 1  # batch size for validation during training, must equal to the number of gpus
+  batch_size_test: 1
+  epochs: 120
+  start_epoch: 0
+  train_gpu: [0, 1, 2, 3]
+  manual_seed:
+
+  # logs
+  print_freq: 10
+  save_freq: 10
+  save_path: exp/4classes/uim_scribble/model/20211108_065050
+
+Distributed:
+  dist_url: tcp://127.0.0.1:12345
+  dist_backend: 'nccl'
+  multiprocessing_distributed: False
+  world_size: 1
+  rank: 0
+  use_apex: False
+  opt_level: 'O0'
+  keep_batchnorm_fp32:
+  loss_scale:
+
+TEST:
+  test_gpu: [0]
+  model_path: pretrained/best_scribble_model_full.pth
+  save_folder: exp/4classes/uim_scribble/result
+  save_pic: True
+  max_size:
+  trimap: trimap_gt

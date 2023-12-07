@@ -1,0 +1,6 @@
+tensorboardX
+tensorboard
+scipy
+opencv-python
+scikit-image
+pyyaml
