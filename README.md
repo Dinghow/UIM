@@ -86,3 +86,16 @@ sh seg_matting_tool/test.sh 4classes uim_bbox
 
 This project is under the MIT license.
 
+## 6. Citation
+
+```
+@article{yang2025exploring,
+  title={Exploring the Interactive Guidance for Unified and Effective Image Matting},
+  author={Yang, Dinghao and Wang, Bin and Li, Weijia and Lin, YiQi and He, Conghui},
+  journal={ACM Transactions on Multimedia Computing, Communications and Applications},
+  year={2025},
+  publisher={ACM New York, NY}
+}
+```
+
+
